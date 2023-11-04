@@ -2,6 +2,10 @@
 import streamlit as st
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
+import os
+
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+
 
 # read the model ready csv file
 df = pd.read_csv('c.csv')
