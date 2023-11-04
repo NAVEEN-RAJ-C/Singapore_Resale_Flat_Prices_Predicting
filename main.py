@@ -318,7 +318,7 @@ def main():
             # Display the prediction
             st.write("Resale Price:", prediction)
         else:
-            st.write("Model not found. Please train the model")
+            st.write("Please train the model")
 
 
 if __name__ == '__main__':
