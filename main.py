@@ -6,18 +6,27 @@ import os
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
+st.set_page_config(page_title='Singapore Flat Resale Price Predictor', layout='wide',
+                   initial_sidebar_state='expanded')
+
 
 # read the model ready csv file
-@st.cache
+
+# Load data using st.cache_data
+@st.cache_data
 def load_data():
-    return pd.read_csv('c.csv')
+    # Load your data here, e.g., using pd.read_csv
+    data = pd.read_csv('c.csv')
+    return data
 
 
 df = load_data()
 
 
-@st.cache(allow_output_mutation=True)
+# Train your model using st.cache_data
+@st.cache_data
 def train_model(data):
+    # Train your model here
     X = data.drop('resale_price', axis=1)
     y = data['resale_price']
     rf_regressor = RandomForestRegressor(random_state=42)
@@ -26,8 +35,6 @@ def train_model(data):
 
 
 def main():
-    st.set_page_config(page_title='Singapore Flat Resale Price Predictor', layout='wide',
-                       initial_sidebar_state='expanded')
     st.sidebar.title('Please provides the required details')
     st.title('Singapore Flat Resale Price Predictor')
     st.header('Please enter the sample size')
