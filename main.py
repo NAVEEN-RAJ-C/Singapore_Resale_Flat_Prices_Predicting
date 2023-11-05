@@ -6,8 +6,23 @@ import os
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
+
 # read the model ready csv file
-df = pd.read_csv('c.csv')
+@st.cache
+def load_data():
+    return pd.read_csv('c.csv')
+
+
+df = load_data()
+
+
+@st.cache(allow_output_mutation=True)
+def train_model(data):
+    X = data.drop('resale_price', axis=1)
+    y = data['resale_price']
+    rf_regressor = RandomForestRegressor(random_state=42)
+    rf_regressor.fit(X, y)
+    return rf_regressor
 
 
 def main():
@@ -21,24 +36,7 @@ def main():
         c_df = df.sample(n=sample_size, random_state=42)
         st.success('Sample Fetched')
     if st.button('train the model'):
-        # Check if the 'session_state' attribute exists in the Streamlit app and initialize it if it doesn't
-        if 'session_state' not in st.session_state:
-            st.session_state.session_data = {
-                'X': None,
-                'y': None,
-                'rf_regressor': None
-            }
-
-        # Then, you can perform your data processing and model training
-        X = c_df.drop('resale_price', axis=1)
-        y = c_df['resale_price']
-        rf_regressor = RandomForestRegressor(random_state=42)
-        rf_regressor.fit(X, y)
-
-        # Store the data and model in 'session_state'
-        st.session_state.session_data['X'] = X
-        st.session_state.session_data['y'] = y
-        st.session_state.session_data['rf_regressor'] = rf_regressor
+        rf_regressor = train_model(c_df)
 
         st.success('Model trained')
 
@@ -316,8 +314,6 @@ def main():
     if st.button('Predict'):
         # Check if 'session_state' exists and contains the trained model
         if 'session_data' in st.session_state and 'rf_regressor' in st.session_state.session_data:
-            # Access the trained model from session_state
-            rf_regressor = st.session_state.session_data['rf_regressor']
 
             # Use the trained model to make predictions
             prediction = rf_regressor.predict(features_df)  # Replace X_test with your test data
