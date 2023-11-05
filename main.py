@@ -17,7 +17,7 @@ st.set_page_config(page_title='Singapore Flat Resale Price Predictor', layout='w
 def load_data():
     # Load your data here, e.g., using pd.read_csv
     data = pd.read_csv('c.csv')
-    sample_df = data.sample(n=100000, random_state=42)
+    sample_df = data.sample(n=5000, random_state=42)
     return sample_df
 
 
