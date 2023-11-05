@@ -39,6 +39,8 @@ def main():
     st.title('Singapore Flat Resale Price Predictor')
     st.header('Please enter the sample size')
     sample_size = st.number_input('sample size', value=5000)
+    c_df = None  # Initialize c_df as None
+    rf_regressor = None  # Initialize rf_regressor as None
     if st.button('Fetch sample data'):
         c_df = df.sample(n=sample_size, random_state=42)
         st.success('Sample Fetched')
