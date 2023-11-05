@@ -15,7 +15,7 @@ st.set_page_config(page_title='Singapore Flat Resale Price Predictor', layout='w
 # Load data using st.cache_data
 @st.cache_data
 def load_data():
-    # Load your data here, e.g., using pd.read_csv
+    # Load data
     data = pd.read_csv('c.csv')
     sample_df = data.sample(n=5000, random_state=42)
     return sample_df
@@ -24,10 +24,10 @@ def load_data():
 c_df = load_data()
 
 
-# Train your model using st.cache_data
+# Train model using st.cache_data
 @st.cache_data
 def train_model(data):
-    # Train your model here
+    # Train model here
     X = data.drop('resale_price', axis=1)
     y = data['resale_price']
     trained_model = RandomForestRegressor(random_state=42)
@@ -50,7 +50,7 @@ def main():
 
     town_key = st.sidebar.selectbox('Select a town', list(town_mapping.keys()))
     town_value = town_mapping[town_key]
-
+    # street dictionary mapping to numbers
     streets = {'ANG MO KIO AVE 1': 1, 'ANG MO KIO AVE 3': 2, 'ANG MO KIO AVE 4': 3, 'ANG MO KIO AVE 10': 4,
                'ANG MO KIO AVE 5': 5,
                'ANG MO KIO AVE 8': 6, 'ANG MO KIO AVE 6': 7, 'ANG MO KIO AVE 9': 8, 'ANG MO KIO AVE 2': 9,
@@ -234,7 +234,7 @@ def main():
     street = st.sidebar.selectbox("Select Street", list(streets.keys()))
     st_value = streets[street]
 
-    # getting block details
+    # get block details
     block = st.sidebar.text_input('Enter the block number (eg.201A)', value=254)
     # Define a mapping for letters to decimal values
     letter_mapping = {chr(ord('A') + i): f'.{i + 1}' for i in range(26)}
@@ -248,7 +248,7 @@ def main():
         '4 ROOM': 4,
         '5 ROOM': 5,
         'EXECUTIVE': 6,
-        'MULTI GENERATION': 7  # You can assign any number you prefer
+        'MULTI GENERATION': 7
     }
 
     flat_type = st.sidebar.selectbox('Select Flat Type', list(category_mapping.keys()))
@@ -267,16 +267,16 @@ def main():
 
     flat_model = st.sidebar.selectbox("Select Flat Model", list(flat_model_mapping.keys()))
     flat_model_value = flat_model_mapping[flat_model]
-
+    # input for area in sq.m
     floor_area = st.sidebar.number_input("Enter the area", value=35.0)
-
+    # storey range input
     storey_lower = st.sidebar.number_input("Enter the lower bound of the storey range", value=4, min_value=0)
     storey_upper = st.sidebar.number_input("Enter the upper bound of the storey range", value=6, min_value=storey_lower)
-
+    # input for lease commence year
     lease_commence_year = st.sidebar.number_input("Enter the lease commence year", value=1990)
 
     # Input for years and months as text
-    remaining_lease = st.sidebar.text_input("Enter rhe remaining lease duration (e.g., '63-7')")
+    remaining_lease = st.sidebar.text_input("Enter the remaining lease duration (years-months e.g., '63-7')")
 
     # Initialize years and months to 0
     years = 0
@@ -295,7 +295,7 @@ def main():
 
     resale_year = st.sidebar.number_input('Enter the resale year', value=1990, min_value=lease_commence_year)
     resale_month = st.sidebar.number_input("Enter the resale month", value=1)
-
+    # create dictionary for features
     features = {'town': town_value,
                 'flat_type': flat_type_value,
                 'block': block_decimal,
@@ -310,9 +310,9 @@ def main():
                 'resale_month': resale_month}
 
     features_df = pd.DataFrame(features, index=[0])
-
+    # create dataframe using the collected features
     st.dataframe(features_df)
-
+    # predict the resale price
     if st.button('Predict'):
         # Use the trained model to make predictions
         prediction = rf_regressor.predict(features_df)  # Replace X_test with your test data
