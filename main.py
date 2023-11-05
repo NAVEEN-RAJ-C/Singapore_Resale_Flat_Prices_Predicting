@@ -6,7 +6,6 @@ import os
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
-
 # read the model ready csv file
 df = pd.read_csv('c.csv')
 
@@ -18,6 +17,9 @@ def main():
     st.title('Singapore Flat Resale Price Predictor')
     st.header('Please enter the sample size')
     sample_size = st.number_input('sample size', value=5000)
+    if st.button('Fetch sample data'):
+        c_df = df.sample(n=sample_size, random_state=42)
+        st.success('Sample Fetched')
     if st.button('train the model'):
         # Check if the 'session_state' attribute exists in the Streamlit app and initialize it if it doesn't
         if 'session_state' not in st.session_state:
@@ -28,7 +30,6 @@ def main():
             }
 
         # Then, you can perform your data processing and model training
-        c_df = df.sample(n=sample_size, random_state=42)
         X = c_df.drop('resale_price', axis=1)
         y = c_df['resale_price']
         rf_regressor = RandomForestRegressor(random_state=42)
@@ -39,7 +40,7 @@ def main():
         st.session_state.session_data['y'] = y
         st.session_state.session_data['rf_regressor'] = rf_regressor
 
-        st.write('Model trained')
+        st.success('Model trained')
 
     town_mapping = {'ANG MO KIO': 1, 'BEDOK': 2, 'BISHAN': 3, 'BUKIT BATOK': 4, 'BUKIT MERAH': 5, 'BUKIT TIMAH': 6,
                     'CENTRAL AREA': 7, 'CHOA CHU KANG': 8, 'CLEMENTI': 9, 'GEYLANG': 10, 'HOUGANG': 11,
@@ -324,7 +325,7 @@ def main():
             # Display the prediction
             st.write("Resale Price:", prediction)
         else:
-            st.write("Please train the model")
+            st.warning("Please train the model")
 
 
 if __name__ == '__main__':
