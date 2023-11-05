@@ -314,16 +314,11 @@ def main():
     st.dataframe(features_df)
 
     if st.button('Predict'):
-        # Check if 'session_state' exists and contains the trained model
-        if 'session_data' in st.session_state and 'rf_regressor' in st.session_state.session_data:
+        # Use the trained model to make predictions
+        prediction = rf_regressor.predict(features_df)  # Replace X_test with your test data
 
-            # Use the trained model to make predictions
-            prediction = rf_regressor.predict(features_df)  # Replace X_test with your test data
-
-            # Display the prediction
-            st.write("Resale Price:", prediction)
-        else:
-            st.warning("Please train the model")
+        # Display the prediction
+        st.write("Resale Price:", prediction)
 
 
 if __name__ == '__main__':
