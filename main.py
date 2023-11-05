@@ -17,10 +17,11 @@ st.set_page_config(page_title='Singapore Flat Resale Price Predictor', layout='w
 def load_data():
     # Load your data here, e.g., using pd.read_csv
     data = pd.read_csv('c.csv')
-    return data
+    sample_df = data.sample(n=100000, random_state=42)
+    return sample_df
 
 
-df = load_data()
+c_df = load_data()
 
 
 # Train your model using st.cache_data
@@ -29,25 +30,17 @@ def train_model(data):
     # Train your model here
     X = data.drop('resale_price', axis=1)
     y = data['resale_price']
-    rf_regressor = RandomForestRegressor(random_state=42)
-    rf_regressor.fit(X, y)
-    return rf_regressor
+    trained_model = RandomForestRegressor(random_state=42)
+    trained_model.fit(X, y)
+    return trained_model
+
+
+rf_regressor = train_model(c_df)
 
 
 def main():
     st.sidebar.title('Please provides the required details')
     st.title('Singapore Flat Resale Price Predictor')
-    st.header('Please enter the sample size')
-    sample_size = st.number_input('sample size', value=5000)
-    c_df = None  # Initialize c_df as None
-    rf_regressor = None  # Initialize rf_regressor as None
-    if st.button('Fetch sample data'):
-        c_df = df.sample(n=sample_size, random_state=42)
-        st.success('Sample Fetched')
-    if st.button('train the model'):
-        rf_regressor = train_model(c_df)
-
-        st.success('Model trained')
 
     town_mapping = {'ANG MO KIO': 1, 'BEDOK': 2, 'BISHAN': 3, 'BUKIT BATOK': 4, 'BUKIT MERAH': 5, 'BUKIT TIMAH': 6,
                     'CENTRAL AREA': 7, 'CHOA CHU KANG': 8, 'CLEMENTI': 9, 'GEYLANG': 10, 'HOUGANG': 11,
