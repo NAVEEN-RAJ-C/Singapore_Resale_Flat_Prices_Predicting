@@ -41,4 +41,6 @@ To get started with this project, follow these steps:
    pip install -r requirements.txt
 
 3. start the streamlit web apploication
+
+   ```bash
    streamlit run main.py
