@@ -293,7 +293,7 @@ def main():
     # Convert years and months to a decimal representation
     total_years = years + (months / 12)
 
-    resale_year = st.sidebar.number_input('Enter the resale year', value=1990, min_value=lease_commence_year)
+    resale_year = st.sidebar.number_input('Enter the resale year', value=2023, min_value=lease_commence_year)
     resale_month = st.sidebar.number_input("Enter the resale month", value=1)
     # create dictionary for features
     features = {'town': town_value,
